@@ -1,27 +1,428 @@
-# RISC-V
-
 # Building a RISCV Core
+This repository contains all the information regarding the 5-day RISC-V based CPU Core Design MYTH (Microprocessor for You in Thirty Hours) Workshop, offered by for VLSI System Design (VSD) and Redwood EDA.
+The RISC-V CPU Core has been designed with the help of Transaction Level Verilog(TL-Verilog) in addition with the Makerchip IDE Platform. 
+# TL-Verilog
+Transaction-Level Verilog (TL-Verilog) is an emerging extension to SystemVerilog that supports a new design methodology, called transaction-level design. For this project, TL-Verilog has been chosed as the HDL of choice for the design. Projects on Makerchip can be completely designed using TL-Verilog. Transaction Level Verilog standard is an extension of Verilog which has various advantages like simpler syntax, shorter codes and easy pipelining. Tha main advantage of TL-Verilog over System Verilog is the amount of code reduction in designing even a simple model.
+# INSTALLATION
+For installation and more details regarding iverilog, yosys and gtkwave, refer to :
+
+https://github.com/Veda1809/pes_asic_class
+
+This repo mainly focuses on Day3-5.
+
 # TABLE OF CONTENTS
-## DAY 1
+## DAY 1 
+**Introduction to RISCV ISA and GNU Compiler Toolchain**
++ [Introduction to Basic Keywords](#introduction-to-basic-keywords)
++ [Labwork for RISCV Toolchain](#labwork-for-riscv-toolchain)
++ [Integer Number Representation](#integer-number-representation) 
+  
+## DAY 2 
+**Introduction to ABI and Basic Verification Flow**
++ [Application Binary Interface](#application-binary-interface)
++ [Labwork using ABI Function Calls](#labwork-using-abi-function-calls)
+
+## DAY 3
 **Digital Logic with TL-Verilog and Makerchip**  
 + [Combinational Logic in TL-Verilog using Makerchip](#combinational-logic-in-tl-verilog-using-makerchip)
 + [Sequential Logic](#sequential-logic)
 + [Pipelined Logic](#pipelined-logic)
 + [Validity](#validity)
 
-## DAY 2
+## DAY 4
 **Basic RISC-V CPU Microarchitecture**
 + [Introduction](#introduction)
 + [Fetch and Decode](#fetch-and-decode)
 + [RISC-V Control Logic](#risc-v-control-logic)
 
-## DAY 3
+## DAY 5
 **Complete Pipelined RISC-V CPU Micro-architecture**
 + [Pipelining the CPU](#pipelining-the-cpu)
 + [Solutions to Pipeline Hazards](#solutions-to-pipeline-hazards)
-+ [Load/Store Instructions and Completing RISC-V CPU](#load/store-instructions-and-completing-risc-v-cpu)
++ [Load & Store Instructions and Completing RISC-V CPU](#load-&-store-instructions-and-completing-risc-v-cpu)
++ [Wrap up](#wrap-up)
 
-# Day-1
+# Day-1   
+## Introduction to Basic Keywords
+<details>
+<summary> Introduction </summary>
+	
+- **ISA (Instruction Set Archhitecture)**
+  - ISA defines the interface between a computer's hardware and its software, specifically how the processor and its components interact with the software instructions that drive the execution of tasks.
+  - It encompasses a set of instructions, addressing modes, data types, registers, memory organization, and the mechanisms for executing and managing instructions.
+
+- **RISC-V (Reduced Instruction Set Computing - Five)**.
+  - It is an open-source Instruction Set Architecture (ISA) that has gained significant attention and adoption in the world of computer architecture and semiconductor design.
+  - RISC architectures simplify the instruction set by focusing on a smaller set of instructions, each of which can be executed in a single clock cycle. This approach usually leads to faster execution of individual instructions. 
+
+<img width="536" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/4eabe0b7-4581-419b-88e7-84c7ac1dac8e">
+
+</details>
+
+<details>
+<summary> From Apps to Hardware </summary>
+
+1. **Apps:** Application software, often referred to simply as "applications" or "apps," is a type of computer software that is designed to perform specific tasks or functions for end-users.
+2. **System software:** System software refers to a category of computer software that acts as an intermediary between the hardware components of a computer system and the user-facing application software. It provides essential services, manages hardware resources, and enables the execution of application programs. System software plays a critical role in maintaining the overall functionality, security, and performance of a computer system.'
+3. **Operating System:** The operating system is a fundamental piece of software that manages hardware resources and provides various services for both users and application programs. It controls tasks such as memory management, process scheduling, file system management, and user interface interaction. Examples of operating systems include Microsoft Windows, macOS, Linux, and Android.
+
+4. **Compiler:** A compiler is a type of software tool that translates high-level programming code written by developers into assembly-level language.
+
+5. **Assembler:** An assembler is a software tool that translates assembly language code into machine code or binary code that can be directly executed by a computer's processor.
+
+6. **RTL:** RTL serves as an abstraction level in the design process that represents the behavior of a digital circuit in terms of registers and the operations that transfer data between them.
+
+ 7. **Hardware:** Hardware refers to the physical components of a computer system or any electronic device. It encompasses all the tangible parts that make up a computing or electronic device and enable it to perform various tasks.
+
+</details>
+
+<details>
+<summary> Detail Description of Course Content </summary>
+
+**Pseudo Instructions:** Pseudo-instructions are used to simplify programming, improve code readability, and reduce the number of explicit instructions a programmer needs to write. They are especially useful for common programming patterns that involve multiple instructions.
+`Ex: li, mv`.
+
+**Base Integer Instructions:** The term "base integer instructions" refers to the fundamental set of instructions that form the foundation for performing basic arithmetic, logical, and data movement operations.
+`Ex: add, sub, and, or, xor, sll`.
+
+**Multiply Extension Intructions:** The RISC-V architecture includes a set of multiply and multiply-accumulate (MAC) extension instructions that enhance the instruction set to perform efficient multiplication and multiplication-accumulate operations.
+`Ex: mul, mulh, mulhu, mulhsu`.
+
+**Single and Double Precision Floating Point Extension:** The RISC-V architecture includes floating-point extensions that provide support for both single-precision (32-bit) and double-precision (64-bit) floating-point arithmetic operations. These extensions are often referred to as the "F" and "D" extensions, respectively. Floating-point arithmetic is essential for handling real numbers with fractional parts and for performing accurate calculations involving decimal values.
+
+**Application Binary Interface:** ABI stands for "Application Binary Interface." It is a set of rules and conventions that govern how software components interact with each other at the binary level. The ABI defines various aspects of program execution, including how function calls are made, how parameters are passed and returned, how memory is allocated and managed, and more.
+
+**Memory Allocation and Stack Pointer** 
+- Memory allocation refers to the process of assigning and managing memory segments for various data structures, variables, and objects used by a program. It involves allocating memory space from the system's memory pool and releasing it when it is no longer needed to prevent memory leaks.
+- The stack pointer is a register used by a program to keep track of the current position of the program's execution on the call stack. 
+
+</details>
+
+## Labwork for RISCV Toolchain
+
+<details>
+<summary> C Program </summary>
+
++ We wrote a C program for calculating the sum from 1 to n using a text editor, leafpad.
+
+`leafpad sumton.c`
+``` c
+#include<stdio.h>
+
+int main(){
+	int i, sum=0, n=111;
+	for (i=1;i<=n; ++i) {
+	sum +=i;
+	}
+	printf("Sum of numbers from 1 to %d is %d \n",n,sum);
+	return 0;
+}
+```
+<img width="345" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/2d5e3fe1-f8fd-434b-8faf-2912d3c056e1">
+
++ Using the gcc compiler, we compiled the program to get the output.
+
+`gcc sumton.c`
+`.\a.out`
+
+<img width="545" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/0b7e7911-d0b2-4a6a-aefd-cd9b4d520a4f">
+
+</details>
+
+<details>
+<summary> RISCV GCC Compiler and Dissemble </summary>
+
++ Using the riscv gcc compiler, we compiled the C program.
+
+`riscv64-unknown-elf-gcc -O1 -mabi=lp64 -march=rv64i -o sum1ton.o sum1ton.c`
+
++ Using `ls -ltr sum1ton.c`, we can check that the object file is created.
+
++ To get the dissembled ALP code for the C program, 
+
+`riscv64-unknown-elf-objdump -d sum1ton.o | less` .
+
++ In order to view the main section, type 
+   - `/main`
+   - press ENTER
+   - press `n` to search next occurance
+   -  press `N` to search for previous occurance
+
++ Here, since we used -O1 optimisation, the number of instructions are 15.
+
+<img width="453" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/98843b92-0beb-4bfc-ba4b-1dac5c93ed3c">
+
++ When we use -Ofast optimisation, we can see that the number of instructions have been reduced to 12.
+
+<img width="422" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/3eb7afcd-0645-4340-bcac-ae2dc3258ce3">
+
+   - -Onumber : level of optimisation required
+   - -mabi : specifies the ABI (Application Binary Interface) to be used during code generation according to the requirements
+   - -march : specifies target architecture
+
++ In order to view the different options available for these fields, use the following commands
+
+ go to the directory where riscv64-unkonwn-elf is present
+
+  - -O1 : ``` riscv64-unkonwn-elf --help=optimizer```
+  - -mabi : ```riscv64-unknown-elf-gcc --target-help```
+  - -march : ```riscv64-unknown-elf-gcc --target-help```
+
++ To quit:
+  - use ```esc :q``` to quit
+
+</details>
+
+<details>
+<summary> Spike Simulation and Debug </summary>
+
++ `spike pk sum1ton.o` is used to check whether the instructions produced are right to give the correct output.
+
+<img width="523" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/2fa7d825-102f-41ed-b9e6-a31c2417cb22">
+
+
++ `spike -d pk sum1ton.c` is used for debugging.
+
++ The contents of the registers can also be viewed.
+
+<img width="317" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/be6fcaa9-ab93-46e0-8da3-7b8056d09f0c">
+
+   - press ENTER : to show the first line and successive ENTER to show successive lines
+   - reg 0 a2 : to check content of register a2 0th core
+   - q : to quit the debug process
+
+</details>
+
+## Integer Number Representation 
+
+<details>
+<summary> Unsigned Numbers </summary>
+
+- Unsigned numbers, also known as non-negative numbers, are numerical values that represent magnitudes without indicating direction or sign.
+- Range: [0, (2^n)-1 ]
+
+</details>
+
+<details>
+<summary> Signed Numbers </summary>
+
+- Signed numbers are numerical values that can represent both positive and negative magnitudes, along with zero.
+- Range :
+   - Positive : [0 , 2^(n-1)-1]
+   - Negative : [-1 to 2^(n-1)]
+
+</details>
+
+<details>
+<summary> Labwork </summary>
+
++ We wrote a C program that shows the maximum and minimum values of 64bit unsigned numbers.
+
+``` c
+#include <stdio.h>
+#include <math.h>
+
+int main(){
+	unsigned long long int max = (unsigned long long int) (pow(2,64) -1);
+	unsigned long long int min = (unsigned long long int) (pow(2,64) *(-1));
+	printf("lowest number represented by unsigned 64-bit integer is %llu\n",min);
+	printf("highest number represented by unsigned 64-bit integer is %llu\n",max);
+	return 0;
+}
+```
+<img width="531" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/1195a00a-9b42-4a33-bce0-6095e5350647">
+
+
++ We wrote a C program that shows the maximum and minimum values of 64bit signed numbers.
+``` c
+#include <stdio.h>
+#include <math.h>
+
+int main(){
+	long long int max = (long long int) (pow(2,63) -1);
+	long long int min = (long long int) (pow(2,63) *(-1));
+	printf("lowest number represented by signed 64-bit integer is %lld\n",min);
+	printf("highest number represented by signed 64-bit integer is %lld\n",max);
+	return 0;
+}
+```
+<img width="481" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/48c4c465-8324-4765-98fe-20584143f33f">
+
+</details>
+
+# Day-2
+## Application Binary Interface
+
+<details>
+<summary> Introduction to ABI </summary>
+
++ An Application Binary Interface (ABI) is a set of rules and conventions that dictate how binary code interacts with and communicates with other binary code, typically at the level of machine code or compiled code. In simpler terms, it defines the interface between two software components or systems that are written in different programming languages, compiled by different compilers, or running on different hardware architectures.
++ The ABI is crucial for enabling interoperability between different software components, such as different libraries, object files, or even entire programs. It allows components compiled independently and potentially on different platforms to work seamlessly together by adhering to a common set of rules for communication and data representation.
+
+</details>
+
+<details>
+<summary> Memory Allocation for Double Words </summary>
+
+64-bit number (or any multi-byte value) can be loaded into memory in little-endian or big-endian. It involves understanding the byte order and arranging the bytes accordingly
+1. **Little-Endian:**
+In little-endian representation, you store the least significant byte (LSB) at the lowest memory address and the most significant byte (MSB) at the highest memory address.
+2. **Big-Endian:**
+In big-endian representation, you store the most significant byte (MSB) at the lowest memory address and the least significant byte (LSB) at the highest memory address.
+#### For example, consider the 64-bit hexadecimal value 0x0123456789ABCDEF. 
+In Little-Endian representation, it would be stored as follows in memory:
+
+<img width="453" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/8c63e751-8882-4b1e-a2f8-84da628ee604">
+
+
+In Big-Endian representation, it would be stored as follows in memory:
+
+<img width="454" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/3954540e-800f-4503-97ef-6c77daacd058">
+
+</details>
+
+<details>
+<summary> Load, Add and Store instructions </summary>
+
+Load, Add, and Store instructions are fundamental operations in computer architecture and assembly programming. They are often used to manipulate data within a computer's memory and registers.
+1. **Load Instructions:**
+Load instructions are used to transfer data from memory to registers. They allow you to fetch data from a specified memory address and place it into a register for further processing.
+
+Example `ld x6, 8(x5)`
+
+In this Example
+- `ld` is the load double-word instruction.
+- `x6` is the destination register.
+- `8(x5)` is the memory address pointed to by register `x5` (base address + offset).
+2. **Store Instructions:**
+Store instructions are used to write data from registers into memory.They store values from registers into memory addresses
+
+Example `sd x8, 8(x9)`
+
+In this Example
+- `sd` is the store double-word instruction.
+- `x8` is the source register.
+- `8(x9)` is the memory address pointed to by register `x9` (base address + offset).
+3. Add Instructions:
+  Add instructions are used to perform addition operations on registers. They add the values of two source registers and store the result in a destination register.
+
+Example `add x9, x10, x11`
+
+In this Example
+- `add` is the add instruction.
+- `x9` is the destination register.
+- `x10` and `x11` are the source registers.
+
+</details>
+
+<details>
+<summary> 32-Registers and their ABI Names </summary>
+
+The choice of the number of registers in a processor's architecture, such as the RISC-V RV64 architecture with its 32 general-purpose registers, involves a trade-off between various factors. While modern processors can have more registers but increasing the number of registers could lead to larger instructions, which would take up more memory and potentially slow down instruction fetch and decode.
+#### ABI Names
+ABI names for registers serve as a standardized way to designate the purpose and usage of specific registers within a software ecosystem. These names play a critical role in maintaining compatibility, optimizing code generation, and facilitating communication between different software components. 
+
+<img width="430" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/3b7aed64-37cd-492f-b9b5-cd840103566a">
+
+</details>
+
+## Labwork using ABI Function Calls
+
+<details>
+<summary> Algorithm for C Program using ASM </summary>
+
+- Incorporating assembly language code into a C program can be done using inline assembly or by linking separate assembly files with your C code.
+- When you call an assembly function from your C code, the C calling convention is followed, including pushing arguments onto the stack or passing them in registers as required.
+- The program executes the assembly function, following the assembly instructions you've provided.
+<img width="477" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/6afb1381-2237-46b0-831a-984e73e1e289">
+
+</details>
+
+<details>
+<summary> Review ASM Function Calls </summary>
+
+- We wrote C code in one file and your assembly code in a separate file.
+- In the assembly file, we declared assembly functions with appropriate signatures that match the calling conventions of your platform.
+
+**C Program**
+`custom1to9.c`
+  ``` c
+  #include <stdio.h>
+  
+  extern int load(int x, int y);
+  
+  int main()
+  {
+    int result = 0;
+    int count = 9;
+    result = load(0x0, count+1);
+    printf("Sum of numbers from 1 to 9 is %d\n", result);
+  }
+```
+**Asseembly File**
+`load.s`
+``` s
+.section .text
+.global load
+.type load, @function
+
+load:
+
+add a4, a0, zero
+add a2, a0, a1
+add a3, a0, zero
+
+loop:
+
+add a4, a3, a4
+addi a3, a3, 1
+blt a3, a2, loop
+add a0, a4, zero
+ret
+```
+
+</details>
+
+<details>
+<summary> Simulate C Program using Function Call </summary>
+
++ **Compilation:** To compile C code and Asseembly file use the command
+
+`riscv64-unknown-elf-gcc -O1 -mabi=lp64 -march=rv64i -o custom1to9.o custom1to9.c load.s` 
+
+this would generate object file `custom1to9.o`.
+
++ **Execution:** To execute the object file run the command 
+
+`spike pk custom1to9.o`
+
+<img width="517" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/46d311ec-4bf9-4ad8-b758-b39eef1dbc7c">
+
+</details>
+
+<details>
+<summary> Lab to Run C-Program on RICV-CPU </summary>
+
+
++ `git clone https://github.com/kunalg123/riscv_workshop_collaterals.git`
+
++ `cd riscv_workshop_collaterals`
+
++ `ls -ltr`
+
++ `cd labs`
+
++ `ls -ltr`
+
++ `chmod 777 rv32im.sh`
+
++ `./rv32im.sh`
+
+<img width="517" alt="image" src="https://github.com/Veda1809/pes_asic_class/assets/142098395/16c15f04-b5c9-441f-9b87-f9e35b19dc6f">
+
+</details>
+
+# Day-3
 ## Combinational Logic in TL-Verilog using Makerchip
 <details>
 <summary> Introduction </summary>
@@ -81,6 +482,8 @@ assign f = sel[0] ? a : (sel[1] ? b : (sel[2] ? c : d)) ;
 
 <details>
 <summary> Makerchip Platform </summary>
+
+Makerchip is a free online environment by Redwood EDA for developing high-quality integrated circuits. The online platform can be used to code, compile, simulate and debug Verilog designs from a browser. It gives you a place to create any digital sequential logic you can dream up faster than you ever thought was possible, all within your browser. 
 
 + Go to http://makerchip.com/
 + Click `IDE`
@@ -664,10 +1067,14 @@ Fig 4.
 
 </details>
 
-# Day-2
+# Day-4
 ## Introduction
 <details>
 <summary> Micro-architecture of Single Cycle RISC-V CPU </summary>
+
+<p align="center">
+  <img width="478" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/bd9a659c-7260-498c-a2bc-55b696c42f92">
+</p>
 
 </details>
 
@@ -687,6 +1094,8 @@ Fig 4.
 <details>
 <summary> Labs </summary>
 
++ Navigate to the starter code [starter code](https://myth.makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FRISC-V_MYTH_Workshop%2Fmaster%2Frisc-v_shell.tlv#) 
+
 + Sample test program to check in viz
 
 ```
@@ -705,6 +1114,12 @@ Fig 4.
 
 + Lab for PC
 
+Program Counter is a register that contains the address of the next instruction to be executed. It is a pointer into the instruction memory, for the instruction that we are going to execute next. Since the memory is byte addressable and each instruction length is 32 bits, the Program Counter adder adds 4 bytes to the address to point to the next address.
+
+For the initial state, before fetching the first ever instruction, there is a presence of a reset signal that will reset the PC value to 0.
+
+For branch instructions, we will have immediate instructions, for which we have to add an offset value to the PC. So for branch instructions, NextPC = Incremented PC + Offset value.
+
 ```v
 |cpu
       @0
@@ -720,7 +1135,9 @@ Fig 4.
   Fig 2.
 </p>
 
-+ Lab for Insstruction Fetch Logic
++ Lab for Instruction Fetch Logic
+
+Here the instruction memory is added to the program. In the Instruction Fetch logic, the instructions are fetched from the instruction memory amd passed to the Decode logic for computation. The instruction memory read address pointer is computed from the program counter and it outputs a 32 bit instruction. (instr[31:0]) . In our case, the Makerchip shell provides us an instantiation to the instruction memory, which contains a test program to compute the sum of numbers from 1 to 9.
 
 ```v
 |cpu
@@ -741,6 +1158,7 @@ Fig 4.
 |cpu
       m4+imem(@1)    // Args: (read stage)
       m4+rf(@1, @1)  // Args: (read stage, write stage) - if equal, no register bypass is required
+      m4+cpu_viz(@4)    // For visualisation
 ```
 
 <p align="center">
@@ -752,6 +1170,14 @@ Fig 4.
 </p>
 
 + Lab for Instruction Decode
+
+In the Instruction Decode logic, all the instructions are decoded for the type of instruction, immediate instructions and the field type instructions. The opcode values are translated into instructions, and all the bit values are interpreted as per defined in the RISC-V ISA.
+
+At first, the Instruction type is decoded using 5 bits of the instruction instr[6:2]. The lower two bits from [1:0] are always equal to '11' for Base integer instructions.
+Next we calculate the 32 bit immediate value (imm[31:0]) based on the instruction type.
+Other instruction fields like funct7, rs2, rs1, funct3, rd and opcode are extracted from the 32-bit instruction based on the instruction type. We collect all the bit values of funct7, funct3, opcode, rs2, rs1 and rd into a single vector and then decode the type of instruction. At this point valid condtions need to be defined for fields like rs1, rs2, funct3 and funct7 because they are unique to only certain instruction types.
+
+Only 8 operations are implemented at this stage namely BEQ, BNE, BLT, BGE, BLTU, BGEU, ADDI and ADD. The other operations from the RV32I Base Instruction Set will be implemented in the later steps.
 
 <p align="center">
   <img width="515" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/3382ad8a-c171-4511-acfc-750e92559fef">
@@ -803,10 +1229,11 @@ Fig 4.
 |cpu
       m4+imem(@1)    // Args: (read stage)
       m4+rf(@1, @1)  // Args: (read stage, write stage) - if equal, no register bypass is required
+      m4+cpu_viz(@4)    // For visualisation
 ```
 <p align="center">
   <img width="960" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/c2759d98-9eee-457e-8114-6b7fbf1079a6">
-<img width="960" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/03f41240-b9c3-4235-ac98-8a1fea97e651">
+<img width="935" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/a5f607f3-6ff2-4686-90a3-dd12bf03103b">
 </p>
 <p align="center">
   Fig 5.
@@ -865,11 +1292,12 @@ Fig 4.
 |cpu
       m4+imem(@1)    // Args: (read stage)
       m4+rf(@1, @1)  // Args: (read stage, write stage) - if equal, no register bypass is required
+      m4+cpu_viz(@4)    // For visualisation
 ```
 
 <p align="center">
 <img width="960" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/e3d00438-2e4e-4062-84f7-d35c8211708c">
-<img width="960" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/00b680d8-58de-4695-b31e-04f293ee9185">
+<img width="911" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/8c481ff3-59f0-4aaf-9a83-620a4c9711a9">
 </p>
 <p align="center">
   Fig 6.
@@ -944,6 +1372,7 @@ Fig 4.
 |cpu
       m4+imem(@1)    // Args: (read stage)
       m4+rf(@1, @1)  // Args: (read stage, write stage) - if equal, no register bypass is required
+      m4+cpu_viz(@4)    // For visualisation
 ```
 
 <p align="center">
@@ -961,6 +1390,10 @@ Fig 4.
 <summary> Labs </summary>
 
 + Lab for Register File
+
+Most of the instructions are arithmetic instructions or other instructions operating on the source registers. We do regitser file read of these source registers. The register file is provided in the shell to us by the macro instantiation //m4+rf (@1, @1) , which can be viewed under the "NAV-TLV" tab on Makerchip. This macro provides us with a register file that defines the interface signals. The register file of the CPU is capable of performing 2 reads in one cycle, of the source operands, and 1 write per cycle of the desination register.
+
+The two source register fields defined as rs1 and rs2 are fed as inputs to the register file and the outputs are the contents of the source registers. The respective enable bits are set based on the valid conditions for rs1 and rs2 as defined in the previous step. Here, since we are accessing two register files at the same time, hence it is callled as 2-port register file.
 
 ```v
 |cpu
@@ -1053,6 +1486,8 @@ Fig 4.
 </p>
 
 + Lab for ALU Operations (add/addi)
+
+The Arithmetic Logic Unit is the component that computes the result based on the selected operation. The ALU operates on the contents of the two registers coming out of the register file. It performs the respective arithmetic operation on the two registers, and finally the result of the ALU is written back to the memory using the register file write port. At this point, the code only supports ADD and ADDI operations to execute the test code. All operations will be added at a later step.
 
 ```v
 |cpu
@@ -1149,6 +1584,9 @@ Fig 4.
 
 + Lab for Register File Write
 
+This step is essential to provide support for instructions that have a destination register (rd) where the output must be stored. The result of the ALU is written back to the memory using the register_file_write port. The register_file_write_enable depends on the validity of the destination register "rd" . The register_file_write_index then takes the value stored in destination register, rd and loads it into the memory in the location as pointed by the register_file_write_index. Since, in RISC-V architecture, x0 register is a hardwired register, whic is always equal to zero, hence it must be made sure that no write operartion is performed on the x0 register. For this, an additional condition to ignore write operation, if the destinaton register is x0 , has been also added.
+
+
 ```v
 |cpu
       @0
@@ -1243,6 +1681,8 @@ Fig 4.
 </p>
 
 + Lab for Branch Instructions
+
+In RISC-V ISA, branches are conditional in nature, which means based on a particular condtion, a specific branch is being taken. Moreover, a branch target pc has to be computed and based on the branch taken value, the pc will choose the new branch target pc when required.
 
 ```v
 |cpu
@@ -1348,8 +1788,11 @@ Fig 4.
 
 + Lab for Testbench
 
-Add `*passed = |cpu/xreg[10]>>5$value == (1+2+3+4+5+6+7+8+9);`
-check log for passed message.
+ - Now that the implementation is complete, a simple testbench statement can be added to ensure whether the core is working correctly or not. The "passed" and "failed" signals are used to communicate with the Makerchip platform to control the simulation. It tells the platform whther the simulation passed without any errors, failed with a list of errors that can be inferred from the log files, and hence to stop the simulation, if failed.
+
+ - When the following line of code as mentioned below is added on Makerchip, the simulation will pass only if the value stored in r10 = sum of numbers from 1 to 9.
+ - Add `*passed = |cpu/xreg[10]>>5$value == (1+2+3+4+5+6+7+8+9);`
+ - Check log for passed message.
 
 <p align="center">
   <img width="593" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/8b740a4b-0dc0-4a65-8f08-e11de4a02eee">
@@ -1360,7 +1803,7 @@ check log for passed message.
 
 </details>
 
-# Day-3
+# Day-5
 ## Pipelining the CPU
 <details>
 <summary> Introduction to Hazards </summary>
@@ -2154,9 +2597,13 @@ A control flow hazard, also known as a control hazard or branch hazard, occurs i
 
 </details>
 
-## Load/Store Instructions and Completing RISC-V CPU
+## Load & Store Instructions and Completing RISC-V CPU
 <details>
 <summary> Introduction </summary>
+
+<p align="center">
+  <img width="490" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/506f0676-de3e-48ab-b153-571a66ed9ef2">
+</p>
 
 </details>
 
@@ -2322,7 +2769,7 @@ A control flow hazard, also known as a control hazard or branch hazard, occurs i
   Fig 1.
 </p>
 
-+ Lab to Data From Memory to Register File
++ Lab to Load Data From Memory to Register File
 
 ```v
 |cpu
@@ -2484,6 +2931,8 @@ Fig 2.
 </p>
 
 + Lab to Instantiate Data Memory to CPU
+
+In addition to all of these, we also have a Memory file for which we have load and store instructions. The Store instruction is going to write a value fetched from the register file into the memory. The Load instruction is going to access the memory, take the value from it and them load it into the register file.
 
 ```v
 |cpu
@@ -2671,8 +3120,8 @@ Fig 2.
    m4_asm(ADDI, r13, r13, 1)            // Increment intermediate register by 1
    m4_asm(BLT, r13, r12, 1111111111000) // If a3 is less than a2, branch to label named <loop>
    m4_asm(ADD, r10, r14, r0)            // Store final result to register a0 so that it can be read by main program
-   m4_asm(SW r0, r10, 100)
-   m4_asm(LW r15, r0, 100)
+   m4_asm(SW, r0, r10, 10000)           // Store the final result value to byte address 16
+   m4_asm(LW, r17, r0, 10000)           // Load the final result value from adress 16 to x17
 ```
 
 + Lab for Jump Instructions
@@ -2852,6 +3301,31 @@ Fig 2.
 </p>
 <p align="center">
   Fig 4.
+</p>
+
+</details>
+
+## Wrap up
+<details>
+<summary> Final RISC-V CPU Core Implementation </summary>
+
+<p align="center">
+<img width="958" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/0b67a8e2-7b0d-4590-bf9e-b658a725a558">
+  <img width="244" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/b5167c47-af15-4327-a644-3eb62f0dff77">
+</p>
+<p align="center">
+Fig 1.
+</p>
+
+The code can be found at https://github.com/Veda1809/RISCV_based_myth/blob/main/final_riscv_core.tlv
+
++ The code required for the RISC-V Core written in TL-Verilog and System Verilog can be compared by selecting the "Show Verilog" on the makerchip platform under the "E" tab. Upon visualization, a significant code reduction can be seen in the comparision chart.
+
+<p align="center">
+<img width="960" alt="image" src="https://github.com/Veda1809/RISCV_based_myth/assets/142098395/ad025e35-30f6-44c9-ae96-abee7947f4e4">
+</p>
+<p align="center">
+Fig 2.
 </p>
 
 </details>
