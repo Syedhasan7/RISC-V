@@ -6,7 +6,7 @@ Transaction-Level Verilog (TL-Verilog) is an emerging extension to SystemVerilog
 # INSTALLATION
 For installation and more details regarding iverilog, yosys and gtkwave, refer to :
 
-https://github.com/Veda1809/pes_asic_class
+https://github.com/Syedhasan7/pes_asic_class
 
 This repo mainly focuses on Day3-5.
 
