@@ -2668,7 +2668,7 @@ In addition to all of these, we also have a Memory file for which we have load a
 Fig 1.
 </p>
 
-The code can be found at https://github.com/Veda1809/RISCV_based_myth/blob/main/final_riscv_core.tlv
+The code can be found at https://github.com/Syedhasan7/RISC-V/blob/main/final_riscv_core.tlv
 
 + The code required for the RISC-V Core written in TL-Verilog and System Verilog can be compared by selecting the "Show Verilog" on the makerchip platform under the "E" tab. Upon visualization, a significant code reduction can be seen in the comparision chart.
 
